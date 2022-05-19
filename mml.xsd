@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+
+    <xs:element name="Movies">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name= "Year" type= "tYear" minOccurs = "1"/>
+                <xs:element name= "Movie" type= "tMovie" maxOccurs="unbounded">
+                    <xs:unique name="unico_title">
+                        <xs:selector xpath="Movies/Movie"/>
+                        <xs:field xpath="@Title"/>
+                    </xs:unique>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name= "tYear">
+        <xs:restriction base= "xs:integer">
+            <xs:minInclusive value= "1900"/>
+            <xs:maxInclusive value= "2021"/>
+        </xs:restriction>    
+    </xs:simpleType>
+
+    <xs:complexType name="tMovie" mixed="true">
+        <xs:sequence>
+            <xs:element name="Title" type= "xs:string"/>
+            <xs:element name="Duration" type= "tDuration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Genre" type= "tGenre" maxOccurs="unbounded"/>
+            <xs:element name="Cast" type= "tCast" minOccurs="0" maxOccurs="unbounded">
+                <xs:unique name="unico_id">
+                    <xs:selector xpath="Movies/Movie/Cast"/>
+                    <xs:field xpath="@id"/>
+                </xs:unique>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="langs" type="tIdioma" use="optional"/>
+    </xs:complexType>
+
+        <xs:simpleType name= "tIdioma">
+            <xs:restriction base= "xs:string">
+                <xs:pattern value="[a-zA-Z ]{0,}"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+        <xs:simpleType name="tDuration">
+            <xs:restriction base="xs:integer">
+            <xs:minInclusive value= "60"/>
+            <xs:maxInclusive value= "300"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+        <xs:simpleType name="tGenre">
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Comedy"/>
+                <xs:enumeration value="Drama"/>
+                <xs:enumeration value="Action"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+        <xs:simpleType name= "tSinopsis">
+            <xs:restriction base= "xs:string"/>
+        </xs:simpleType>
+
+        <xs:complexType name="tCast">
+            <xs:sequence>
+                <xs:element name="Name" type="tName"/>
+                <xs:element name="Role" type="tRole"/>
+                <xs:element name="Phone" type="tPhone" minOccurs="0"/>
+                <xs:element name="Email" type="tEmail" minOccurs="0"/>
+                <xs:element name="MML" type="xs:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="tIdentificador" use="required"/>
+        </xs:complexType>
+
+            <xs:simpleType name="tIdentificador">
+                <xs:restriction base="xs:string">
+                   <xs:pattern value="[a-z]{3}\d{3}"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="tName">
+                <xs:restriction base= "xs:string">
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="tPhone">
+                <xs:restriction base="xs:integer">
+                    <xs:pattern value="[0-9]{9}"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="tRole">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Main"/>
+                    <xs:enumeration value="Supporting"/>
+                    <xs:enumeration value="Extra"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="tEmail">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"/> 
+                </xs:restriction>
+            </xs:simpleType>
+
+           
+    
+</xs:schema>
